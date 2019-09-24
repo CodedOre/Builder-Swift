@@ -1,0 +1,11 @@
+[Plugin]
+Name=Builder-Swift
+Module=builder-swift
+Description=Provides integration for the Swift Package Manager
+Author=CodedOre
+Copyright=Copyright © 2019 CodedOre
+Loader=python3
+X-Has-Resources=true
+X-Project-File-Filter-Name=Swift Package File (Package.swift)
+X-Project-File-Filter-Pattern=Package.swift
+X-Builder-ABI=3.32
