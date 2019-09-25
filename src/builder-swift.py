@@ -53,7 +53,7 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
 
         if type(build_system) != SwiftBuildSystem:
             return
-
+        
         config = pipeline.get_config()
         builddir = pipeline.get_builddir()
         runtime = config.get_runtime()
@@ -66,23 +66,31 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
         dependend_launcher.set_cwd(srcdir)
         dependend_launcher.push_argv('swift')
         dependend_launcher.push_argv('package')
+        dependend_launcher.push_argv('--build-path')
+        dependend_launcher.push_argv(builddir)
         dependend_launcher.push_argv('resolve')
         
         build_launcher = pipeline.create_launcher()
         build_launcher.set_cwd(srcdir)
         build_launcher.push_argv('swift')
         build_launcher.push_argv('build')
+        build_launcher.push_argv('--build-path')
+        build_launcher.push_argv(builddir)
         
         clean_launcher = pipeline.create_launcher()
         clean_launcher.set_cwd(srcdir)
         clean_launcher.push_argv('swift')
         clean_launcher.push_argv('package')
+        clean_launcher.push_argv('--build-path')
+        clean_launcher.push_argv(builddir)
         clean_launcher.push_argv('clean')
         
         install_launcher = pipeline.create_launcher()
         install_launcher.set_cwd(srcdir)
         install_launcher.push_argv('swift')
         install_launcher.push_argv('run')
+        install_launcher.push_argv('--build-path')
+        install_launcher.push_argv(builddir)
         
         dependend_stage = Ide.PipelineStageLauncher.new(context, dependend_launcher)
         dependend_stage.set_name(_("Resolving Dependencies"))
