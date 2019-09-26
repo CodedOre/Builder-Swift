@@ -87,10 +87,7 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
         
         install_launcher = pipeline.create_launcher()
         install_launcher.set_cwd(srcdir)
-        install_launcher.push_argv('swift')
-        install_launcher.push_argv('run')
-        install_launcher.push_argv('--build-path')
-        install_launcher.push_argv(builddir)
+        install_launcher.push_argv()
         
         dependend_stage = Ide.PipelineStageLauncher.new(context, dependend_launcher)
         dependend_stage.set_name(_("Resolving Dependencies"))
