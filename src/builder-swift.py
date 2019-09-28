@@ -36,16 +36,12 @@ class SwiftBuildSystem(Ide.Object, Ide.BuildSystem):
         return 'swift'
     
     def do_get_display_name(self):
-        return 'Swift'
+        return 'Swift Package Manager'
     
     def do_get_priority(self):
         return 0
 
 class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
-    """
-    The SwiftPipelineAddin is responsible for creating the necessary build
-    stages and attaching them to phases of the build pipeline.
-    """
 
     def do_load(self, pipeline):
         context = self.get_context()
@@ -112,7 +108,7 @@ class SwiftBuildTarget(Ide.Object, Ide.BuildTarget):
         return None
     
     def do_get_name(self):
-        return 'swift-run'
+        return 'swift-package'
     
     def do_get_language(self):
         return 'swift'
