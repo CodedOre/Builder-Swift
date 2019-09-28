@@ -6,4 +6,14 @@ This Plugin for [Gnome Builder](https://wiki.gnome.org/Apps/Builder) aims to sup
 
 **Currently working:**     Resolve Dependencies and Building inside of Gnome-Builder
 
-**Currently not working:** Debugging and Running inside of Gnome-Builder.
+
+
+## ToDo:
+
+- Targets in the "Targets"-Section of Gnome-Builder
+- Tests in the "Unit-Test"-Section of Gnome-Builder
+
+- Running a Target
+- Running multiple Targets
+- Debugging a Target
+- Debugging multiple Targets
