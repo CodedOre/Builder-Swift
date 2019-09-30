@@ -81,10 +81,6 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
         clean_launcher.push_argv(builddir)
         clean_launcher.push_argv('clean')
         
-#        install_launcher = pipeline.create_launcher()
-#        install_launcher.set_cwd(srcdir)
-#        install_launcher.push_argv()
-        
         dependend_stage = Ide.PipelineStageLauncher.new(context, dependend_launcher)
         dependend_stage.set_name(_("Resolving Dependencies"))
         self.track(pipeline.attach(Ide.PipelinePhase.DEPENDENCIES, 0, dependend_stage))
@@ -94,10 +90,6 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
         build_stage.set_clean_launcher(clean_launcher)
         build_stage.connect('query', self._query)
         self.track(pipeline.attach(Ide.PipelinePhase.BUILD, 0, build_stage))
-        
-#        install_stage = Ide.PipelineStageLauncher.new(context, install_launcher)
-#        install_stage.set_name(_("Installing project"))
-#        self.track(pipeline.attach(Ide.PipelinePhase.INSTALL, 0, install_stage))
     
     def _query(self, stage, pipeline, targets, cancellable):
         stage.set_completed(False)
