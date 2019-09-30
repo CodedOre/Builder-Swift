@@ -23,6 +23,7 @@ from gi.repository import GObject
 from gi.repository import Ide
 
 class SwiftBuildSystemDiscovery(Ide.SimpleBuildSystemDiscovery):
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.props.glob = 'Package.swift'
@@ -30,6 +31,7 @@ class SwiftBuildSystemDiscovery(Ide.SimpleBuildSystemDiscovery):
         self.props.priority = 0
 
 class SwiftBuildSystem(Ide.Object, Ide.BuildSystem):
+    
     project_file = GObject.Property(type=Gio.File)
     
     def do_get_id(self):
@@ -42,7 +44,7 @@ class SwiftBuildSystem(Ide.Object, Ide.BuildSystem):
         return 0
 
 class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
-
+    
     def do_load(self, pipeline):
         context = self.get_context()
         build_system = Ide.BuildSystem.from_context(context)
@@ -90,6 +92,10 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
         build_stage.set_clean_launcher(clean_launcher)
         build_stage.connect('query', self._query)
         self.track(pipeline.attach(Ide.PipelinePhase.BUILD, 0, build_stage))
+        
+        # Determine what it will take to "swift run" for this pipeline
+        # and stash it on the build_system for use by the build target.
+        build_system.run_args = ['swift', 'run', '--build-path', builddir]
     
     def _query(self, stage, pipeline, targets, cancellable):
         stage.set_completed(False)
@@ -112,6 +118,12 @@ class SwiftBuildTarget(Ide.Object, Ide.BuildTarget):
             return project_file.get_path()
         else:
             return project_file.get_parent().get_path()
+    
+    def do_get_argv(self):
+        context = self.get_context()
+        build_system = Ide.BuildSystem.from_context(context)
+        assert type(build_system) == SwiftBuildSystem
+        return build_system.run_args
     
     def do_get_priority(self):
         return 0

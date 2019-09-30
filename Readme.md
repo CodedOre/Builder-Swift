@@ -4,7 +4,7 @@ This Plugin for [Gnome Builder](https://wiki.gnome.org/Apps/Builder) aims to sup
 
 
 
-**Currently working:**     Resolve Dependencies and Building inside of Gnome-Builder
+**Currently working:**     Resolve Dependencies, Building and Running inside of Gnome-Builder
 
 
 
@@ -12,8 +12,7 @@ This Plugin for [Gnome Builder](https://wiki.gnome.org/Apps/Builder) aims to sup
 
 - Targets in the "Targets"-Section of Gnome-Builder
 - Tests in the "Unit-Test"-Section of Gnome-Builder
-
-- Running a Target
+- Building multiple Targets
 - Running multiple Targets
 - Debugging a Target
 - Debugging multiple Targets
