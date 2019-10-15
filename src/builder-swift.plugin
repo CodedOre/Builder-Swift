@@ -8,4 +8,4 @@ Loader=python3
 X-Has-Resources=true
 X-Project-File-Filter-Name=Swift Package File (Package.swift)
 X-Project-File-Filter-Pattern=Package.swift
-X-Builder-ABI=3.32
+X-Builder-ABI=3.34
