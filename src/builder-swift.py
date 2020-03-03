@@ -15,8 +15,10 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import threading
+import json
 import os
 
+from subprocess import check_output
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
@@ -102,14 +104,17 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
 
 class SwiftBuildTarget(Ide.Object, Ide.BuildTarget):
     
+    def __init__(self, n):
+        self.target_name = n
+
     def do_get_install_directory(self):
         return None
     
     def do_get_name(self):
-        return 'swift-package'
+        return self.target_name
     
     def do_get_language(self):
-        return 'swift'
+        return 'Swift'
     
     def do_get_cwd(self):
         context = self.get_context()
@@ -123,7 +128,9 @@ class SwiftBuildTarget(Ide.Object, Ide.BuildTarget):
         context = self.get_context()
         build_system = Ide.BuildSystem.from_context(context)
         assert type(build_system) == SwiftBuildSystem
-        return build_system.run_args
+        run_args = build_system.run_args.copy()
+        run_args.append(self.target_name)
+        return run_args
     
     def do_get_priority(self):
         return 0
@@ -143,7 +150,20 @@ class SwiftBuildTargetProvider(Ide.Object, Ide.BuildTargetProvider):
                                          code=Gio.IOErrorEnum.NOT_SUPPORTED))
             return
         
-        task.targets = [build_system.ensure_child_typed(SwiftBuildTarget)]
+        print("Launch TargetFinder")
+        print(Ide.BuildSystem.from_context(context).project_file.get_path())
+        pkg_dump = check_output(["swift", "package", "dump-package"],
+                                cwd=Ide.BuildSystem.from_context(context).project_file.get_path(),
+                                universal_newlines=True)
+        pkg_set = json.loads(pkg_dump)
+        task.targets = []
+        for target in pkg_set["targets"]:
+            #if target["type"] == "regular":
+            newtarget = SwiftBuildTarget(target["name"])
+            print(newtarget.target_name)
+            task.targets.append(build_system.ensure_child_typed(SwiftBuildTarget(target["name"])))
+
+        print("Targets found")
         task.return_boolean(True)
     
     def do_get_targets_finish(self, result):
