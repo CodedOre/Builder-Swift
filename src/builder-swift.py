@@ -105,6 +105,7 @@ class SwiftPipelineAddin(Ide.Object, Ide.PipelineAddin):
 class SwiftBuildTarget(Ide.Object, Ide.BuildTarget):
     
     def __init__(self, n):
+        super().__init__()
         self.target_name = n
 
     def do_get_install_directory(self):
@@ -150,7 +151,6 @@ class SwiftBuildTargetProvider(Ide.Object, Ide.BuildTargetProvider):
                                          code=Gio.IOErrorEnum.NOT_SUPPORTED))
             return
         
-        print("Launch TargetFinder")
         print(Ide.BuildSystem.from_context(context).project_file.get_path())
         pkg_dump = check_output(["swift", "package", "dump-package"],
                                 cwd=Ide.BuildSystem.from_context(context).project_file.get_path(),
@@ -160,10 +160,9 @@ class SwiftBuildTargetProvider(Ide.Object, Ide.BuildTargetProvider):
         for target in pkg_set["targets"]:
             #if target["type"] == "regular":
             newtarget = SwiftBuildTarget(target["name"])
-            print(newtarget.target_name)
-            task.targets.append(build_system.ensure_child_typed(SwiftBuildTarget(target["name"])))
+            print("newtarget = ", newtarget.target_name)
+            task.targets.append(build_system.ensure_child_typed(newtarget))
 
-        print("Targets found")
         task.return_boolean(True)
     
     def do_get_targets_finish(self, result):
